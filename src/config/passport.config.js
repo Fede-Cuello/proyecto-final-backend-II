@@ -3,10 +3,11 @@ import local from "passport-local";
 import UserModel from "../models/users.model.js";
 import { createHash, isValidPassword } from "../utils/index.js";
 import { Strategy as JWTStrategy, ExtractJwt } from "passport-jwt";
+import envs from "./envs.js";
 
 const LocalStrategy = local.Strategy;
 const ExtractJWT = ExtractJwt;
-const JWT_SECRET = "federico";
+const JWT_SECRET = envs.jwt_secret;
 
 
 
@@ -22,7 +23,7 @@ const initializePassport = () => {
       },
       async (req, username, password, done) => {
         try {
-          const { first_name, last_name, email, age } = req.body;
+          const { first_name, last_name, email, age, role } = req.body;
           const userFound = await UserModel.findOne({ email: username });
 
           if (userFound) {
@@ -35,7 +36,9 @@ const initializePassport = () => {
             last_name,
             email,
             age,
+            role: role || "user",
             password: createHash(password),
+            
           });
 
           return done(null, newUser);

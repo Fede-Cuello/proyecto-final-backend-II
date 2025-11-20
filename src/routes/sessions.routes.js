@@ -2,12 +2,13 @@ import { Router } from "express";
 import passport from "passport";
 import UserModel from "../models/users.model.js";
 import { createHash, isValidPassword ,generateToken} from "../utils/index.js";
+import UserDTO from "../dto/user.dto.js";
 
 const router = Router();
 
 router.post("/register", async (req, res) => {
   try {
-    const { first_name, last_name, email, password, age } = req.body;
+    const { first_name, last_name, email, password, age, role } = req.body;
     const userExist = await UserModel.findOne({ email });
     if (userExist)
       return res.status(400).json({ message: "El correo ya existe" });
@@ -18,6 +19,7 @@ router.post("/register", async (req, res) => {
       last_name,
       email,
       age,
+      role: role || "user" ,
       password: hashedPassword,
     });
 
@@ -78,19 +80,8 @@ router.get(
   "/current",
   passport.authenticate("jwt", { session: false }),
   (req, res) => {
-    if (!req.user)
-      return res.status(401).json({ message: "No hay usuario autenticado" });
-
-    res.json({
-      message: "Usuario autenticado",
-      user: {
-        id: req.user._id,
-        first_name: req.user.first_name,
-        last_name: req.user.last_name,
-        email: req.user.email,
-        role: req.user.role,
-      },
-    });
+    const safeUser = new UserDTO(req.user);
+    res.json({ status: "success", user: safeUser });
   }
 );
 

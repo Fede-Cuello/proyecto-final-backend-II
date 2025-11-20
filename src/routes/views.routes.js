@@ -17,11 +17,11 @@ router.get("/home", (req, res) => {
 
 
 router.get(
-  "/current",
+  "/current", 
   passport.authenticate("jwt", { session: false }),
   (req, res) => {
-    const user = req.user.toObject ? req.user.toObject() : req.user;
-    res.render("current", { user});
+    const dto = new UserDTO(req.user);
+    res.render("current", { user: dto });
   }
 );
 

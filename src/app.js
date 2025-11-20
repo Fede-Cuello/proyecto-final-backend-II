@@ -5,14 +5,17 @@ import passport from "passport";
 import { __dirname, join } from "./utils/index.js";
 import userRoutes from "./routes/sessions.routes.js";
 import viewRoutes from "./routes/views.routes.js";
+import cartsRoutes from "./routes/carts.routes.js";
+import productsRoutes from "./routes/products.routes.js"
+import ticketsRoutes from "./routes/tickets.routes.js"
 import initializePassport from "./config/passport.config.js";
 import { connectDB } from "./config/db.js";
+import envs from "./config/envs.js";
 
 
 const app = express();
-const PORT = 3000;
-const MONGO_URL =
-  "mongodb+srv://fedecuello:codercoder@cluster0.bakiwgn.mongodb.net/users?retryWrites=true&w=majority";
+const PORT = envs.port;
+const MONGO_URL =envs.mongo_url;
 
 // handlebars
 app.engine("handlebars", engine());
@@ -35,10 +38,15 @@ app.get("/", (req, res) => {
 });
 
 app.use("/api/sessions", userRoutes);
+app.use("/api/carts", cartsRoutes);
+app.use("/api/products", productsRoutes);
+app.use("/api/tickets", ticketsRoutes);
 app.use("/", viewRoutes);
 
+
+
 // Conexion a MongoDB
-connectDB(MONGO_URL);
+connectDB(envs.mongo_url);
 
 // Servidor 
 app.listen(PORT, () => {
