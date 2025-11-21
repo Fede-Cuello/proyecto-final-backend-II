@@ -2,8 +2,9 @@ import bcrypt from "bcrypt"
 import jwt from "jsonwebtoken"
 import { fileURLToPath } from "url"
 import { dirname, join } from "path"
+import envs from "../config/envs.js"
 
-const JWT_SECRET = "federico";
+const JWT_SECRET = envs.jwt_secret;
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
 
