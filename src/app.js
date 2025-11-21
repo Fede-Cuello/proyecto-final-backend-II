@@ -46,7 +46,7 @@ app.use("/", viewRoutes);
 
 
 // Conexion a MongoDB
-connectDB(envs.mongo_url);
+connectDB(MONGO_URL);
 
 // Servidor 
 app.listen(PORT, () => {
